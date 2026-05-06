@@ -1,3 +1,149 @@
+# Replication Project
+
+## Overview
+
+This repository replicates the results from the paper:
+
+> De Neve, J.-W., Moshoeshoe, R., & Bor, J. (2026).  
+> *Age at School Entry and Human Capital Development: Evidence from Lesotho.*  
+> American Economic Journal: Applied Economics.
+
+The paper studies how the age at which children start primary school affects education, labor market outcomes, health, and demographic outcomes in Lesotho, using a regression discontinuity design based on a school entry cutoff.
+
+The goal of this project is to reproduce the main empirical results, figures, and tables using Julia.
+
+---
+
+## Project Structure
+
+```
+.
+├── output/             # Replicated figures and tables
+├── report/             # Replication report (Quarto)
+└── README.md
+```
+
+---
+
+## Installation
+
+1. Install Julia (recommended version: 1.x)
+
+2. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd <your-repo-name>
+```
+
+3. Install dependencies:
+```julia
+using Pkg
+Pkg.activate(".")
+Pkg.instantiate()
+```
+
+---
+
+## Running Unit Tests
+
+To run the unit tests:
+
+```julia
+using Pkg
+Pkg.activate(".")
+Pkg.test()
+```
+
+---
+
+## Running the Replication
+
+To run the full replication pipeline:
+
+```julia
+include("run_all.jl")
+run_all()
+```
+
+This script performs the following steps:
+- loads and cleans the data
+- implements the regression discontinuity design (RDD)
+- reproduces the main empirical results
+- generates figures and tables
+- saves outputs in the `output/` folder
+
+---
+
+## Output
+
+All replicated results are saved in:
+
+```
+output/
+```
+
+This includes:
+- Figures (RDD plots, main results)
+- Tables (regression outputs)
+
+---
+
+## Report
+
+The replication report is written using Quarto.
+
+### Compile the report
+
+1. Navigate to:
+```
+report/
+```
+
+2. Run:
+```bash
+quarto render
+```
+
+### Report output
+
+The compiled report will be available as:
+- `.html` or `.pdf` in the `report/` folder
+
+---
+
+## Methodology
+
+The replication focuses on reproducing the main identification strategy of the paper:
+
+- Regression Discontinuity Design (RDD)
+- Cutoff: June 30 school entry rule
+- Treatment: being born after the cutoff (starting school later)
+
+Key outcomes include:
+- Years of schooling
+- Literacy and skills
+- Labor market outcomes
+- Fertility and marriage
+- Health outcomes
+
+---
+
+## Notes
+
+- Ensure all required datasets are correctly placed in the `data/` folder
+- The entire pipeline can be executed using `run_all()`
+- Results may differ slightly due to data access, cleaning choices, or software differences
+
+---
+
+## Authors
+
+- Orazio Torre — Collegio Carlo Alberto & Politecnico di Torino  
+- Dalila Maria Tamburrano — Collegio Carlo Alberto & Politecnico di Torino  
+- Dalia Lemmi — Collegio Carlo Alberto & Politecnico di Torino  
+
+---
+
 # CompEcon Project Template 
 
 This is the replication project template. 
