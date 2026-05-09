@@ -1,9 +1,10 @@
 module LesothoSchoolEntryReplication
 
-export run_all
-export add_numbers
 
-include("functions.jl")
+export run_all
+
+include("figures.jl")
+include("tables.jl")
 include("run_all.jl")
 
 end
