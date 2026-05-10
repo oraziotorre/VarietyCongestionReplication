@@ -37,7 +37,7 @@ function run_all()
     println("RUNNING FIGURE REPLICATION")
     println("===================================")
 
-    run_all_figures(MICS_DATA, FIGURES)
+    run_figure1(MICS_DATA, FIGURES)
 
     println("===================================")
     println("DONE")
