@@ -181,6 +181,107 @@ function run_figure1(df, FIGURES)
 
 end
 
+function figure_maternal_education(df_bh)
+    local_df = copy(df_bh)
+
+    # Keep only first-born children
+    local_df.brthord        = Vector{Union{Missing,Int}}(local_df.brthord)
+    local_df.birthmo_child  = Vector{Union{Missing,Int}}(local_df.birthmo_child)
+    local_df.momsec         = Vector{Union{Missing,Float64}}(local_df.momsec)
+
+    filter!(row -> coalesce(row.brthord == 1, false) && !ismissing(row.birthmo_child), local_df)
+
+    # Collapse: mean and SE of momsec by birth month
+    gdf = combine(groupby(local_df, :birthmo_child), :momsec => mean_se => AsTable)
+    sort!(gdf, :birthmo_child)
+
+    gdf.yu = gdf.y .+ 1.96 .* gdf.se_y
+    gdf.yl = gdf.y .- 1.96 .* gdf.se_y
+
+    month_labels = [
+        "Jan","Feb","Mar","Apr","May","Jun",
+        "Jul","Aug","Sep","Oct","Nov","Dec"
+    ]
+
+    p = scatter(
+        gdf.birthmo_child,
+        gdf.y,
+
+        xlabel = "Month of birth of first child",
+        ylabel = "Probability mother attained secondary school",
+
+        legend = false,
+
+        xticks       = (1:12, month_labels),
+        xrotation    = 0,
+        tickfontsize = 7,
+
+        xlims = (0, 13),
+        ylims = (0.4, 0.7),
+        yticks = ([0.4, 0.5, 0.6, 0.7], ["0.4", "0.5", "0.6", "0.7"]),
+
+        markercolor = :white,
+        markerstrokecolor = :gray40,
+        markersize  = 4,
+
+        grid = true,
+        gridstyle = :dot,
+        gridcolor = :gray70,
+
+        framestyle = :box,
+
+        left_margin   = 10mm,
+        bottom_margin = 10mm,
+        right_margin  = 5mm,
+        top_margin    = 5mm,
+
+        size = (700, 450),
+        dpi  = 150
+    )
+
+    # Confidence interval caps (rcap style)
+    for i in 1:nrow(gdf)
+        plot!(
+            [gdf.birthmo_child[i], gdf.birthmo_child[i]],
+            [gdf.yl[i], gdf.yu[i]],
+            lw    = 1,
+            color = :gray40,
+            label = false
+        )
+        # top cap
+        plot!(
+            [gdf.birthmo_child[i] - 0.15, gdf.birthmo_child[i] + 0.15],
+            [gdf.yu[i], gdf.yu[i]],
+            lw = 1, color = :gray40, label = false
+        )
+        # bottom cap
+        plot!(
+            [gdf.birthmo_child[i] - 0.15, gdf.birthmo_child[i] + 0.15],
+            [gdf.yl[i], gdf.yl[i]],
+            lw = 1, color = :gray40, label = false
+        )
+    end
+
+    # Vertical dashed line between June and July
+    vline!(
+        [6.5],
+        color     = :black,
+        lw        = 1,
+        linestyle = :dash,
+        label     = false
+    )
+
+    return p
+end
+
+
+function run_figure3(df_bh, FIGURES)
+    @info "Running Figure 3"
+    p = figure_maternal_education(df_bh)
+    output_path = joinpath(FIGURES, "placebo_maternaleducation.png")
+    savefig(p, output_path)
+end
+
 
 function run_all_figures(MICS_DATA, FIGURES)
 
@@ -190,5 +291,11 @@ function run_all_figures(MICS_DATA, FIGURES)
     @info "Creating Figure 1..."
     run_figure1(df, FIGURES)
     @info "Figure 1 completed."
+
+    df_bh = DataFrame(readstat(joinpath(MICS_DATA, "micsbh.dta")))
+
+    @info "Creating Figure 3..."
+    run_figure3(df_bh, FIGURES)
+    @info "Figure 3 completed."
 
 end
