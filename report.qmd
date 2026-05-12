@@ -88,22 +88,10 @@ Here are the original package's computational requirements:
 
 
 ## Our Computational setup
-
-> {REPLICATOR}: please fill in manually. Remove examples that are not relevant, adjust examples to fit special circumstances. Some of this is available from the standard log output in Stata or R. Some frequently used details are below. Some of these details can be found as follows:
->
-> - (Windows) by right-clicking on "This PC"
-> - (Mac) Apple-menu > "About this Mac"
-> - (Linux) see code in `tools/linux-system-info.sh`
->
-> Some options are listed below. Choose the one that applies and delete everything else.
-
-- Mac Laptop M2 MacBook Pro, MacOS 10.14.6, 8 GB of memory, (M2 Processor, 8 cores)
-- Windows Laptop IdeaPad SLim 5 14IMH9, 
-
-> {REPLICATOR}: Please also list the software you used (specific versions). List only the ones you used, add any not listed in the examples:
+- Windows Laptop IdeaPad Slim 5 14IMH9, Windows 11 Home, 
+Intel Core Ultra 7 155H 1.40 GHz, 32 GB RAM, 64-bit operating system 
 
 Software used:
-
 - Julia 1.12.6
 - `ReadStatTables.jl` v0.6
 - `DataFrames.jl` v1.7
