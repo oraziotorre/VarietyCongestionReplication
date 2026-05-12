@@ -1,6 +1,6 @@
 ---
 title: "CCA `CompEcon` Replication Project"
-subtitle: "Replication of xxxx by i, j and k (AER, 2024)"
+subtitle: "Replication of Age at School Entry and Human Capital Development: Evidence from Lesotho by Jan-Walter De Neve, Ramaele Moshoeshoe and Jacob Bor (AEJ, 2026)"
 author: 
   - name: Orazio Torre
     affiliations: Politecnico di Torino; Collegio Carlo Alberto
@@ -20,9 +20,6 @@ author:
 This report was created as part of the assessment for the [`Computational Economics` Course](https://floswald.github.io/CompEcon/) in the PhD program at Collegio Carlo Alberto taught by [Florian Oswald](https://floswald.github.io/).
 
 :::
-
-> {REPLICATOR} Every line which looks like this one, that is, it starts with {REPLICATOR} and has this formatting (there is a grey bar on the left 👀), is an **instruction for you, the replicator**. When you are done with editing this file, _there should be no such line left_ - you should delete all of them.
-
 ## Paper and Replication Package
 
 This report attempts a replication of 
@@ -42,8 +39,6 @@ We have been able to replicate the following exhibits:
 > **Partial results and caveats:** The original paper uses Stata for all estimation and figure production. We replicated the analysis in Julia using the `FixedEffectModels.jl`, `GLM.jl` and `Plots.jl` files. The four figures are successfully replicated, some minor visual differences arise from differences between Julia's `Plots.jl` and Stata's `rdplot` command.
 
 ## High Level Description of Computational Problem in Paper
-
-> {REPLICATOR}: please write here a concise summary describing the main computational tasks in this paper, i.e. which equations to solve, which to estimate, which methodology, any implementation details visible from the replication package (algorithms, packages, procedures used)
 The paper evaluates the impact of age at school entry on human capital development in Lesotho using a **regression discontinuity design (RDD)**. The key identifying variation is Lesotho's enrollment age threshold: children born on or before June 30 must enroll in grade 1 in January of the same year (at age ~5.3 years), while children born July 1 or later may defer enrollment by one year (entering at age ~5.8 years). This creates a local natural experiment in the age at which children begin primary school.
 The base specification is a standard linear RDD estimated separately for the six-month windows on either side of the cutoff:
 
@@ -58,7 +53,6 @@ The paper estimates this specification across multiple outcomes and datasets:
 - **Medium-run outcomes** (MICS 2018 household questionnaire, Lesotho Census 2006): years of schooling completed, grade progression, school dropout
 - **Long-run outcomes** (Lesotho DHS 2004–05, 2009–10, 2014): labor market outcomes, household wealth, fertility, marriage, HIV biomarkers
 - **Intergenerational outcomes** (DHS birth histories, MICS birth histories): child survival and mortality
-
 
 The computational work in the paper involves the following main tasks:
 
@@ -112,8 +106,6 @@ We replicated four figures from the paper.
 The original Figure 1 has two panels. Panel A shows the probability of currently attending grade 1 or higher by month and year of birth (for children born 2011–2013 in the MICS 2018 survey). Panel B shows average age at the beginning of the school year among current grade 1 students, by month of birth. Both panels are intended to document the enrollment discontinuity between children born in June versus July.
 
 Our replication reproduces both panels using the MICS 2018 household data (`mics6hl.dta`). We compute group means with 95% confidence intervals and overlay a vertical dashed line at the June/July threshold. The main pattern — the sharp jump in enrollment probability between June- and July-born children of roughly 40 percentage points in Panel A, and the half-year gap in average age at entry in Panel B — is successfully reproduced. 
-
-
 
 ![Replicated version](replication-package/LesothoSchoolEntryReplication.jl/output/figures
 /MOB_and_SchoolEntry.png)

@@ -82,7 +82,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">CCA <code>CompEcon</code> Replication Project</h1>
-<p class="subtitle lead">Replication of xxxx by i, j and k (AER, 2024)</p>
+<p class="subtitle lead">Replication of Age at School Entry and Human Capital Development: Evidence from Lesotho by Jan-Walter De Neve, Ramaele Moshoeshoe and Jacob Bor (AEj, 2026)</p>
 </div>
 
 
@@ -99,7 +99,7 @@ window.Quarto = {
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author">Dalila Maria Tamburrano <a href="mailto:…" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+    <p class="author">Dalila Maria Tamburrano <a href="mailto:dalila.tamburrano@carloalberto.org" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
@@ -107,7 +107,7 @@ window.Quarto = {
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author">Dalia Lemmi <a href="mailto:…" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+    <p class="author">Dalia Lemmi <a href="mailto:dalia.lemmi@carloalberto.org" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
@@ -141,122 +141,119 @@ window.Quarto = {
 <p>This report was created as part of the assessment for the <a href="https://floswald.github.io/CompEcon/"><code>Computational Economics</code> Course</a> in the PhD program at Collegio Carlo Alberto taught by <a href="https://floswald.github.io/">Florian Oswald</a>.</p>
 </div>
 </div>
-<blockquote class="blockquote">
-<p>{REPLICATOR} Every line which looks like this one, that is, it starts with {REPLICATOR} and has this formatting (there is a grey bar on the left 👀), is an <strong>instruction for you, the replicator</strong>. When you are done with editing this file, <em>there should be no such line left</em> - you should delete all of them.</p>
-</blockquote>
 <section id="paper-and-replication-package" class="level2">
 <h2 class="anchored" data-anchor-id="paper-and-replication-package">Paper and Replication Package</h2>
 <p>This report attempts a replication of</p>
 <ul>
-<li>paper: DOI of published paper</li>
-<li>replication package: DOI of package</li>
+<li>paper: 10.1257/app.20230709</li>
+<li>replication package: 10.3886/E217581V1</li>
 </ul>
 <p>by using the <code>julia</code> computation language.</p>
 <p>We have been able to replicate the following exhibits:</p>
 <ol type="1">
-<li>figure one</li>
-<li>figure two</li>
-<li>table three</li>
+<li>Figure 1 : Month of birth and entry into primary school</li>
+<li>Figure 3 : Continuity in pre-treatment characteristics: maternal education</li>
+<li>Figure 5 : Reversal of early disadvantage for cohorts born July–December</li>
+<li>Figure 18 : Foundational reading, numeracy skills, and home reading habits by age and month of birth</li>
 </ol>
 <blockquote class="blockquote">
-<p>{REPLICATOR}: leave comments here for partial results, caveats, and other observations</p>
+<p><strong>Partial results and caveats:</strong> The original paper uses Stata for all estimation and figure production. We replicated the analysis in Julia using the <code>FixedEffectModels.jl</code>, <code>GLM.jl</code> and <code>Plots.jl</code> files. The four figures are successfully replicated, some minor visual differences arise from differences between Julia’s <code>Plots.jl</code> and Stata’s <code>rdplot</code> command.</p>
 </blockquote>
 </section>
 <section id="high-level-description-of-computational-problem-in-paper" class="level2">
 <h2 class="anchored" data-anchor-id="high-level-description-of-computational-problem-in-paper">High Level Description of Computational Problem in Paper</h2>
-<blockquote class="blockquote">
-<p>{REPLICATOR}: please write here a concise summary describing the main computational tasks in this paper, i.e.&nbsp;which equations to solve, which to estimate, which methodology, any implementation details visible from the replication package (algorithms, packages, procedures used)</p>
-<p>You can use standard <span class="math inline">\(\LaTeX\)</span> expression, <span class="math inline">\(x+y\)</span>, also display mode of course <span class="math display">\[\begin{align}
-x +y &amp; = z\\
-z &amp;= 0
-\end{align}\]</span></p>
-</blockquote>
+<p>The paper evaluates the impact of age at school entry on human capital development in Lesotho using a <strong>regression discontinuity design (RDD)</strong>. The key identifying variation is Lesotho’s enrollment age threshold: children born on or before June 30 must enroll in grade 1 in January of the same year (at age ~5.3 years), while children born July 1 or later may defer enrollment by one year (entering at age ~5.8 years). This creates a local natural experiment in the age at which children begin primary school. The base specification is a standard linear RDD estimated separately for the six-month windows on either side of the cutoff:</p>
+<p><span class="math display">\[
+E[Y_i \mid \text{MOB}_i] = \beta_0 + \beta_1(\text{MOB}_i) + \beta_2 \times \mathbf{1}[\text{MOB}_i \geq \text{July}] + \beta_3(\text{MOB}_i) \times \mathbf{1}[\text{MOB}_i \geq \text{July}]
+\]</span> where <span class="math inline">\(Y_i\)</span> is the outcome of interest, <span class="math inline">\(\text{MOB}_i\)</span> is month of birth centered as <span class="math inline">\(\text{MOB}_i - 6.5\)</span>, and <span class="math inline">\(\beta_2\)</span> captures the reduced-form (intention-to-treat) discontinuity at the threshold.</p>
+<p>The paper estimates this specification across multiple outcomes and datasets:</p>
+<ul>
+<li><strong>Short-run outcomes</strong> (MICS 2018 child questionnaire): school enrollment and age at entry, foundational literacy and numeracy test scores, time use (herding, domestic activities, economic activities, hazardous labor)</li>
+<li><strong>Medium-run outcomes</strong> (MICS 2018 household questionnaire, Lesotho Census 2006): years of schooling completed, grade progression, school dropout</li>
+<li><strong>Long-run outcomes</strong> (Lesotho DHS 2004–05, 2009–10, 2014): labor market outcomes, household wealth, fertility, marriage, HIV biomarkers</li>
+<li><strong>Intergenerational outcomes</strong> (DHS birth histories, MICS birth histories): child survival and mortality</li>
+</ul>
+<p>The computational work in the paper involves the following main tasks:</p>
+<ol type="1">
+<li><strong>Data cleaning and merging</strong> across multiple survey datasets (MICS, DHS, SACMEQ, Census) stored as Stata <code>.dta</code> files</li>
+<li><strong>OLS and fixed-effects regression</strong> of equation (1) for each outcome, using month of birth as the running variable and school-age indicators as fixed effects</li>
+<li><strong>Binned scatter plots</strong> with overlaid quadratic RD fit (using Stata’s <code>rdplot</code> command from <code>rdrobust</code>)</li>
+<li><strong>Heterogeneity analyses</strong> by gender, household livestock ownership, age cohort</li>
+<li><strong>Placebo and robustness checks</strong>: McCrary density test, balance tests on pre-treatment covariates, alternative bandwidths, donut RDD, household fixed effects</li>
+</ol>
+<p>The original replication package uses Stata/MP with the <code>rdrobust</code>, <code>reghdfe</code>, and <code>ivregress</code> packages. Our Julia reimplementation uses:</p>
+<ul>
+<li><code>ReadStatTables.jl</code> — reading <code>.dta</code> Stata files</li>
+<li><code>DataFrames.jl</code> — data manipulation</li>
+<li><code>FixedEffectModels.jl</code> — fixed-effects OLS regression (equivalent to Stata’s <code>reghdfe</code>)</li>
+<li><code>GLM.jl</code> — standard OLS for marginal predictions</li>
+<li><code>Plots.jl</code> — figure production</li>
+<li><code>Statistics.jl</code> — summary statistics</li>
+</ul>
 </section>
 <section id="computational-requirements" class="level2">
 <h2 class="anchored" data-anchor-id="computational-requirements">Computational Requirements</h2>
 <p>Here are the original package’s computational requirements:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">No requirements specified</label></li>
-<li><label><input type="checkbox">Software Requirements specified as follows:</label>
 <ul>
-<li>Software 1, version …</li>
-<li>Software 2, version …</li>
-</ul></li>
-<li><label><input type="checkbox">Computational Requirements specified as follows:</label>
+<li>Software Requirements specified as follows:
 <ul>
-<li>Cluster size, etc.</li>
-</ul></li>
-<li><label><input type="checkbox">Time Requirements specified as follows:</label>
-<ul>
-<li>Length of necessary computation (hours, weeks, etc.)</li>
+<li>Stata/MP (version used in original package not explicitly specified)</li>
+<li><code>rdrobust</code> Stata package</li>
+<li><code>reghdfe</code> Stata package</li>
 </ul></li>
 </ul>
 </section>
 <section id="our-computational-setup" class="level2">
 <h2 class="anchored" data-anchor-id="our-computational-setup">Our Computational setup</h2>
-<blockquote class="blockquote">
-<p>{REPLICATOR}: please fill in manually. Remove examples that are not relevant, adjust examples to fit special circumstances. Some of this is available from the standard log output in Stata or R. Some frequently used details are below. Some of these details can be found as follows:</p>
 <ul>
-<li>(Windows) by right-clicking on “This PC”</li>
-<li>(Mac) Apple-menu &gt; “About this Mac”</li>
-<li>(Linux) see code in <code>tools/linux-system-info.sh</code></li>
+<li>Windows Laptop IdeaPad Slim 5 14IMH9, Windows 11 Home, Intel Core Ultra 7 155H 1.40 GHz, 32 GB RAM, 64-bit operating system</li>
 </ul>
-<p>Some options are listed below. Choose the one that applies and delete everything else.</p>
-</blockquote>
-<ul>
-<li>Mac Laptop M2 MacBook Pro, MacOS 10.14.6, 8 GB of memory, (M2 Processor, 8 cores)</li>
-<li>RedCloud Servers: Intel Xeon Processor (Skylake) 3.09 GHz (18 processors), Installed Ram 176 GB, 64-bit operating system, x64-based processor</li>
-<li>CCSS Cloud: Windows Server AMD EPYC 7763 64-Core Processor 2.44 GHz, 128GB</li>
-<li>BioHPC Linux server, Rocky Linux 9.0, AMD Opteron Processor 6380 / 16 cores/ 125 GB memory (adjust as necessary from output of linux-system-info.sh)</li>
-<li>WholeTale (describe the environment chosen)</li>
-<li>CodeOcean (describe the type of capsule chosen) Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (16 cores), 128 GB Memory</li>
-<li>Bitbucket Pipelines, “Ubuntu 20.04.2 LTS”, Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz, 8 cores, 9GB memory</li>
-<li>Codespaces, “Ubuntu 20.04.2 LTS”, Intel(R) Xeon(R) Platinum 8272CL CPU @ 2.60GHz, 2 core, 8GB/ 4-core, 16GB/ 8-core, 32 GB/ 16-core, 64GB (choose appropriately)</li>
-</ul>
-<blockquote class="blockquote">
-<p>{REPLICATOR}: Please also list the software you used (specific versions). List only the ones you used, add any not listed in the examples:</p>
-</blockquote>
-<ul>
-<li>Stata/MP 18.0</li>
-<li>Matlab R2022a</li>
-<li>Intel Compiler 3.14152 (note: there is no such thing, so please verify the version!)</li>
-</ul>
+<p>Software used: - Julia 1.12.6 - <code>ReadStatTables.jl</code> v0.6 - <code>DataFrames.jl</code> v1.7 - <code>FixedEffectModels.jl</code> v1.10 - <code>GLM.jl</code> v1.9 - <code>Plots.jl</code> v1.40 - <code>Statistics.jl</code> (standard library) - Quarto 1.9.37</p>
 </section>
 <section id="replication" class="level1">
 <h1>Replication</h1>
-<ul>
-<li>Figure 1: Looks the same</li>
-<li>Figure 2: no program provided</li>
-<li>Figure 3: Paper version looks different from the one generated by programs:</li>
-</ul>
-<section id="images" class="level2">
-<h2 class="anchored" data-anchor-id="images">Images</h2>
-<p>you can include images in the <code>images/</code> folder, like the examples below. Notice that <code>.pdf</code> images don’t work well for html output.</p>
-<div id="fig-three" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-three-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>We replicated four figures from the paper.</p>
+<section id="figure-1-month-of-birth-and-entry-into-primary-school" class="level2">
+<h2 class="anchored" data-anchor-id="figure-1-month-of-birth-and-entry-into-primary-school">Figure 1: Month of Birth and Entry into Primary School</h2>
+<p>The original Figure 1 has two panels. Panel A shows the probability of currently attending grade 1 or higher by month and year of birth (for children born 2011–2013 in the MICS 2018 survey). Panel B shows average age at the beginning of the school year among current grade 1 students, by month of birth. Both panels are intended to document the enrollment discontinuity between children born in June versus July.</p>
+<p>Our replication reproduces both panels using the MICS 2018 household data (<code>mics6hl.dta</code>). We compute group means with 95% confidence intervals and overlay a vertical dashed line at the June/July threshold. The main pattern — the sharp jump in enrollment probability between June- and July-born children of roughly 40 percentage points in Panel A, and the half-year gap in average age at entry in Panel B — is successfully reproduced.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/heman.png" class="img-fluid figure-img"></p>
-<figcaption>Paper version</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/skeletor.png" class="img-fluid figure-img"></p>
+<p><img src="replication-package/LesothoSchoolEntryReplication.jl/output/figures%20/MOB_and_SchoolEntry.png" class="img-fluid figure-img"></p>
 <figcaption>Replicated version</figcaption>
 </figure>
 </div>
+</section>
+<section id="figure-3-continuity-in-pre-treatment-characteristics-maternal-education" class="level2">
+<h2 class="anchored" data-anchor-id="figure-3-continuity-in-pre-treatment-characteristics-maternal-education">Figure 3: Continuity in Pre-treatment Characteristics — Maternal Education</h2>
+<p>Figure 3 is a placebo test for the identifying assumption of the RDD: if being born just after June 30 (rather than just before) only affects later outcomes through delayed school entry, then there should be no discontinuity in pre-determined characteristics. The figure shows the probability that a mother attained secondary education by the month of birth of her first child. Under the null of no manipulation or selection, this relationship should be smooth across the June/July threshold.</p>
+<p>Our replication uses the MICS birth history data (<code>micsbh.dta</code>), restricting to first-born children of eligible mothers. We find no evidence of a discontinuity at the threshold, consistent with the paper’s original finding. The scatter of means and confidence intervals around a flat level of roughly 0.55–0.60 is well reproduced.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="replication-package/LesothoSchoolEntryReplication.jl/output/figures%20/placebo_maternaleducation.png" class="img-fluid figure-img"></p>
+<figcaption>Replicated version</figcaption>
+</figure>
 </div>
+</section>
+<section id="figure-5-reversal-of-early-disadvantage-for-cohorts-born-julydecember" class="level2">
+<h2 class="anchored" data-anchor-id="figure-5-reversal-of-early-disadvantage-for-cohorts-born-julydecember">Figure 5: Reversal of Early Disadvantage for Cohorts Born July–December</h2>
+<p>Figure 5 is one of the central results of the paper. It shows that children born July–December (who enter primary school at an older age) have fewer years of schooling than January–June-born children at ages 3–11, but that this disadvantage reverses starting around age 12–15, so that by late adolescence July–December-born children have more total years of schooling. This “reversal of fortunes” is the main dynamic result of the paper.</p>
+<p>We estimate simple OLS regressions of years of education (<code>educ</code>) on the treatment indicator (<code>birthmo_jul</code>) separately for each age group, using MICS 2018 household data. We plot the coefficient estimates and 95% confidence intervals. Our replicated figure successfully captures the reversal: a negative coefficient in early childhood, crossing zero in early adolescence, and turning positive and growing by late adolescence.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="replication-package/LesothoSchoolEntryReplication.jl/output/figures%20/Reversal_of_fortunes.png" class="img-fluid figure-img"></p>
+<figcaption>Replicated version</figcaption>
+</figure>
 </div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-three-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Figure 3 [DELETE THIS FIGURE]
-</figcaption>
+</section>
+<section id="figure-18-foundational-skills-and-home-reading-by-age-and-month-of-birth" class="level2">
+<h2 class="anchored" data-anchor-id="figure-18-foundational-skills-and-home-reading-by-age-and-month-of-birth">Figure 18: Foundational Skills and Home Reading by Age and Month of Birth</h2>
+<p>Figure 18 shows how foundational learning skills and home reading habits evolve with age, separately for children born January–June (earlier school entrants) and July–December (later entrants). The four panels cover: (A) Sesotho reading skills, (B) English reading skills, (C) numeracy skills, and (D) probability of reading books at home. The key result is that early entrants have a skill advantage at younger ages, but this narrows and reverses — particularly for reading — by ages 13–14.</p>
+<p>Our replication uses the MICS 2018 foundational skills data (<code>mics6fs.dta</code>), computing weighted means by age group (7–8, 9–10, 11–12, 13–14) and birth month group (Jan–Jun vs Jul–Dec), using survey weights. The bar chart format, color scheme, and age groupings match the paper. The main patterns are replicated: the initial advantage of early entrants in all four outcomes at ages 7–8, and the narrowing or reversal of this gap at older age groups. A limitation is that the paper uses <code>rdplot</code>-based estimates for each age bin while our version shows raw weighted means.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="replication-package/LesothoSchoolEntryReplication.jl/output/figures%20/skills_kids.png" class="img-fluid figure-img"></p>
+<figcaption>Replicated version</figcaption>
 </figure>
 </div>
 </section>
