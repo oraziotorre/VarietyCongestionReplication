@@ -1,6 +1,6 @@
 ---
 title: "CCA `CompEcon` Replication Project"
-<<<<<<< HEAD
+
 subtitle: "Replication of Age at School Entry and Human Capital Development: Evidence from Lesotho by Jan-Walter De Neve, Ramaele Moshoeshoe and Jacob Bor (AEJ, 2026)"
 ===
 author: 
