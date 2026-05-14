@@ -110,6 +110,7 @@ The original Figure 1 has two panels. Panel A shows the probability of currently
 Our replication reproduces both panels using the MICS 2018 household data (`mics6hl.dta`). We compute group means with 95% confidence intervals and overlay a vertical dashed line at the June/July threshold. The main pattern — the sharp jump in enrollment probability between June- and July-born children of roughly 40 percentage points in Panel A, and the half-year gap in average age at entry in Panel B — is successfully reproduced. 
 
 ![Replicated version](replication-package/LesothoSchoolEntryReplication.jl/output/figures/MOB_and_SchoolEntry.png)
+![Original version]
 
 ## Figure 3: Continuity in Pre-treatment Characteristics — Maternal Education
 Figure 3 is a placebo test for the identifying assumption of the RDD: if being born just after June 30 (rather than just before) only affects later outcomes through delayed school entry, then there should be no discontinuity in pre-determined characteristics. The figure shows the probability that a mother attained secondary education by the month of birth of her first child. Under the null of no manipulation or selection, this relationship should be smooth across the June/July threshold.
@@ -117,6 +118,7 @@ Figure 3 is a placebo test for the identifying assumption of the RDD: if being b
 Our replication uses the MICS birth history data (`micsbh.dta`), restricting to first-born children of eligible mothers. We find no evidence of a discontinuity at the threshold, consistent with the paper's original finding. The scatter of means and confidence intervals around a flat level of roughly 0.55–0.60 is well reproduced.
 
 ![Replicated version](replication-package/LesothoSchoolEntryReplication.jl/output/figures/placebo_maternaleducation.png)
+![Original version]
 
 ## Figure 5: Reversal of Early Disadvantage for Cohorts Born July–December
 
@@ -125,6 +127,7 @@ Figure 5 is one of the central results of the paper. It shows that children born
 We estimate simple OLS regressions of years of education (`educ`) on the treatment indicator (`birthmo_jul`) separately for each age group, using MICS 2018 household data. We plot the coefficient estimates and 95% confidence intervals. Our replicated figure successfully captures the reversal: a negative coefficient in early childhood, crossing zero in early adolescence, and turning positive and growing by late adolescence. 
 
 ![Replicated version](replication-package/LesothoSchoolEntryReplication.jl/output/figures/Reversal_of_fortunes.png)
+![Original version]
 
 ## Figure 18: Foundational Skills and Home Reading by Age and Month of Birth
 
@@ -134,5 +137,5 @@ Our replication uses the MICS 2018 foundational skills data (`mics6fs.dta`), com
 
 
 ![Replicated version](replication-package/LesothoSchoolEntryReplication.jl/output/figures/skills_kids.png)
-
+![Original version] (replication-package/original-replication/Output/Figures/skills_kids.png)
 
