@@ -1,4 +1,6 @@
-# Replication Project
+# Lesotho School Entry Replication
+
+This project was developed as part of the [*Computational Economics*](https://www.carloalberto.org/wp-content/uploads/2025/08/syllabus_ComputationalEconomics.pdf) course at Collegio Carlo Alberto.  
 
 ## Overview
 
@@ -11,6 +13,8 @@ This repository replicates the results from the paper:
 The paper studies how the age at which children start primary school affects education, labor market outcomes, health, and demographic outcomes in Lesotho, using a regression discontinuity design based on a school entry cutoff.
 
 The goal of this project is to reproduce the main empirical results, figures, and tables using Julia.
+
+The original replication package is available on [OpenICPSR](https://www.openicpsr.org/openicpsr/project/217581/version/V1/view).
 
 ---
 
