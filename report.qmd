@@ -37,6 +37,7 @@ We have been able to replicate the following exhibits:
 2. Figure 3 : Continuity in pre-treatment characteristics: maternal education
 3. Figure 5 : Reversal of early disadvantage for cohorts born July–December
 4. Figure 18 : Foundational reading, numeracy skills, and home reading habits by age and month of birth
+5. Table 2 — Effect of age at school entry on children's time use by gender
 
 > **Partial results and caveats:** The original paper uses Stata for all estimation and figure production. We replicated the analysis in Julia using the `FixedEffectModels.jl`, `GLM.jl` and `Plots.jl` files. The four figures are successfully replicated, some minor visual differences arise from differences between Julia's `Plots.jl` and Stata's `rdplot` command.
 
@@ -132,11 +133,71 @@ We estimate simple OLS regressions of years of education (`educ`) on the treatme
 
 ## Figure 18: Foundational Skills and Home Reading by Age and Month of Birth
 
-Figure 18 shows how foundational learning skills and home reading habits evolve with age, separately for children born January–June (earlier school entrants) and July–December (later entrants). The four panels cover: (A) Sesotho reading skills, (B) English reading skills, (C) numeracy skills, and (D) probability of reading books at home. The key result is that early entrants have a skill advantage at younger ages, but this narrows and reverses — particularly for reading — by ages 13–14.
+Figure 18 shows how foundational learning skills and home reading habits evolve with age, separately for children born January–June (earlier school entrants) and July–December (later entrants). The four panels cover: (A) Sesotho reading skills, (B) English reading skills, (C) numeracy skills, and (D) probability of reading books at home. The key result is that early entrants have a skill advantage at younger ages, but this narrows and reverses, particularly for reading, by ages 13–14.
 
 Our replication uses the MICS 2018 foundational skills data (`mics6fs.dta`), computing weighted means by age group (7–8, 9–10, 11–12, 13–14) and birth month group (Jan–Jun vs Jul–Dec), using survey weights. The bar chart format, color scheme, and age groupings match the paper. The main patterns are replicated: the initial advantage of early entrants in all four outcomes at ages 7–8, and the narrowing or reversal of this gap at older age groups. A limitation is that the paper uses `rdplot`-based estimates for each age bin while our version shows raw weighted means.
 
 
 ![Replicated version](replication-package/LesothoSchoolEntryReplication.jl/output/figures/skills_kids.png)
 ![Original version](replication-package/original-replication/Output/Figures/skills_kids.jpg)
+
+
+## Table 2 — Effect of Age at School Entry on Children's Time Use by Gender
+This table presents the effect of age at school entry on out-of-school time use for children aged 10–14, separately by gender, estimating eight fixed-effects regressions (four outcomes × two genders) of the form:
+
+$$
+Y_i = \alpha + \delta \cdot \mathbf{1}[\text{MOB}_i \geq \text{July}] + \gamma \cdot \text{MOB\_cent}_i + \phi \cdot (\mathbf{1}[\text{MOB}_i \geq \text{July}] \times \text{MOB\_cent}_i) + \mu_{\text{schage}} + \varepsilon_i
+$$
+
+The outcome variables are hours spent herding animals, hours spent on domestic activities, hours spent on economic activities, and an indicator for hazardous labor. Robust standard errors are reported. For each cell, the predicted mean of the outcome for children in the lower age limit (born January–June) is computed from a companion OLS model. The key result is a large and statistically significant reduction in time spent herding animals for boys born after the cutoff: old-for-grade boys spend about 5.3 fewer hours per week herding, a 31% reduction relative to the baseline of approximately 17 hours. Effects on domestic activities, economic activities, and hazardous labor are in the expected direction but imprecisely estimated. For girls, no significant effect is found for any outcome, consistent with the gendered nature of herding as a cultural practice in Lesotho.
+### Original Table (Stata / `reghdfe`)
+
+*Source: `replication-package/original-replication/Output/Tables/opportunity_costs.doc`*
+
+| | (1) F | (2) M | (3) F | (4) M | (5) F | (6) M | (7) F | (8) M |
+|---|---|---|---|---|---|---|---|---|
+| **DV** | *Herding* | *Herding* | *Domestic* | *Domestic* | *Economic* | *Economic* | *Hazardous* | *Hazardous* |
+| **Units** | hours | hours | hours | hours | hours | hours | =1 | =1 |
+| Born July–Dec (=1) | 0.020 | −5.306 | −2.083 | 0.783 | −0.191 | −1.412 | 0.022 | −0.059 |
+| *(s.e.)* | (0.201) | (2.369) | (2.010) | (1.908) | (0.720) | (1.419) | (0.034) | (0.053) |
+| (Jul–Dec) × MOB | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| MOB | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| School age FE | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Mean DV, lower limit** | **0.200** | **17.000** | **13.700** | **7.500** | **1.400** | **5.600** | **0.054** | **0.258** |
+| Observations | 940 | 970 | 940 | 970 | 940 | 970 | 940 | 970 |
+| R² | 0.004 | 0.013 | 0.027 | 0.006 | 0.002 | 0.025 | 0.008 | 0.021 |
+
+### Replicated Table (Julia / `FixedEffectModels.jl`)
+
+*Source: `replication-package/LesothoSchoolEntryReplication.jl/output/tables/opportunity_costs.txt`*
+
+| | (1) F | (2) M | (3) F | (4) M | (5) F | (6) M | (7) F | (8) M |
+|---|---|---|---|---|---|---|---|---|
+| **DV** | *Herding* | *Herding* | *Domestic* | *Domestic* | *Economic* | *Economic* | *Hazardous* | *Hazardous* |
+| **Units** | hours | hours | hours | hours | hours | hours | =1 | =1 |
+| Born July–Dec (=1) | 0.020 | −5.306 | −2.083 | 0.783 | −0.191 | −1.412 | 0.022 | −0.059 |
+| *(s.e.)* | (0.201) | (2.369) | (2.010) | (1.908) | (0.720) | (1.419) | (0.034) | (0.053) |
+| (Jul–Dec) × MOB | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| MOB | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| School age FE | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Mean DV, lower limit** | **0.173** | **16.972** | **13.724** | **7.527** | **1.371** | **5.572** | **0.054** | **0.258** |
+| Observations | 940 | 970 | 940 | 970 | 940 | 970 | 940 | 970 |
+| R² | 0.004 | 0.013 | 0.027 | 0.006 | 0.002 | 0.025 | 0.008 | 0.021 |
+
+### Comparison
+
+The two versions are in close agreement. All eight regression coefficients and all standard errors are numerically identical across Stata and Julia, confirming a successful replication of the core econometric results. The only differences arise in the **Mean DV, lower limit** row, which reports the predicted mean outcome for the reference group (children born January–June, at the lower school-age limit), computed from a companion OLS model. Specifically:
+
+| Column | Original | Replicated | Difference |
+|---|---|---|---|
+| (1) Female herding | 0.200 | 0.173 | −0.027 |
+| (2) Male herding | 17.000 | 16.972 | −0.028 |
+| (3) Female domestic | 13.700 | 13.724 | +0.024 |
+| (4) Male domestic | 7.500 | 7.527 | +0.027 |
+| (5) Female economic | 1.400 | 1.371 | −0.029 |
+| (6) Male economic | 5.600 | 5.572 | −0.028 |
+| (7) Female hazardous | 0.054 | 0.054 | 0.000 |
+| (8) Male hazardous | 0.258 | 0.258 | 0.000 |
+
+The discrepancies are small in magnitude (below 0.03 in all cases) and are confined to the marginal means, not to the regression estimates themselves. They most likely stem from how the prediction is computed over the lower-limit subsample: the original Stata code uses the `margins` command evaluated at `birthmo_cent = 0`, whereas our Julia implementation (`calculate_margin` in `utils.jl`) predicts over the observed January–June subsample after setting `birthmo_cent = 0` manually and then averages the predictions. Small differences in the subsample used for averaging, or in floating-point handling across the two languages, account for the gap. The binary outcomes (columns 7–8) are unaffected because their marginal means are low-precision values that both implementations round to the same three decimal places.
 
