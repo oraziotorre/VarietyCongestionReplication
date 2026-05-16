@@ -150,6 +150,7 @@ Y_i = \alpha + \delta \cdot \mathbf{1}[\text{MOB}_i \geq \text{July}] + \gamma \
 $$
 
 The outcome variables are hours spent herding animals, hours spent on domestic activities, hours spent on economic activities, and an indicator for hazardous labor. Robust standard errors are reported. For each cell, the predicted mean of the outcome for children in the lower age limit (born January–June) is computed from a companion OLS model. The key result is a large and statistically significant reduction in time spent herding animals for boys born after the cutoff: old-for-grade boys spend about 5.3 fewer hours per week herding, a 31% reduction relative to the baseline of approximately 17 hours. Effects on domestic activities, economic activities, and hazardous labor are in the expected direction but imprecisely estimated. For girls, no significant effect is found for any outcome, consistent with the gendered nature of herding as a cultural practice in Lesotho.
+
 ### Original Table (Stata / `reghdfe`)
 
 *Source: `replication-package/original-replication/Output/Tables/opportunity_costs.doc`*
