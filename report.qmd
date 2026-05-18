@@ -96,7 +96,31 @@ Software used:
   - `Random.jl`, seeded random data generation in the mock data helpers (`mock_main_df`, `mock_bh_df`, `mock_fs_df`) used by the test suite
   - Quarto 1.9.3
 
+## Structure of the Julia Replication Package
 
+The Julia replication package was designed as a modular project, with the code separated into multiple source files with distinct responsibilities.
+
+The package is organized around five main files:
+
+- `utils.jl`  
+  Contains shared utility functions used throughout the project. These include statistical helpers such as `mean_se`, plotting helpers such as `add_ci!`, `scatter_ci_plot`, `add_errorbars!`, and `add_reference_line!`, regression utilities such as `regression_by_group`, grouped aggregation functions such as `grouped_weighted_mean`, and auxiliary routines such as `calculate_margin` and `check_controls`. The file also defines plotting constants (`MONTH_LABELS`, `FIG_STYLE`) and mock-data generators (`mock_main_df`, `mock_bh_df`, `mock_fs_df`) used by the unit tests.
+
+- `figures.jl`  
+  Contains all functions responsible for figure generation. Each replicated exhibit is implemented as a dedicated function, including `figure_1A`, `figure_1B`, `run_figure1`, `run_figure3`, `run_figure5`, `skills_panel`, and `run_figure18`. These functions rely on the reusable plotting and statistical utilities defined in `utils.jl`.
+
+- `tables.jl`  
+  Implements the replication of Table 2. The main function, `run_table2`, performs data preparation, runs the eight fixed-effects regressions using `FixedEffectModels.jl`, computes companion margins through `calculate_margin`, and assembles the final outputs. The helper function `write_table2` formats the regression results and exports the final `.txt` table.
+
+- `run_all.jl`  
+  Serves as the entry point for the full replication pipeline. It defines file paths, loads the original `.dta` datasets and calls the figure and table generation.
+
+- `LesothoSchoolEntryReplication.jl`  
+  Defines the main Julia module of the package. This file exports the public API and includes all source files (`utils.jl`, `figures.jl`, `tables.jl`, and `run_all.jl`) into a single package namespace.
+
+In addition, the package includes a dedicated testing suite:
+
+- `test/runtests.jl`  
+  Contains the unit tests implemented with `TestItemRunner.jl`. The tests validate both low-level statistical utilities and the complete figure/table generation pipeline using synthetic mock datasets. This structure makes the package reproducible even without distributing the restricted MICS microdata.
 
 # Replication
 
